@@ -1,24 +1,33 @@
 # %%
 from selenium.webdriver import Firefox
+#from selenium.webdriver import Chrome
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 opts = Options()
-#opts.headless = True
-#assert opts.headless  # Operating in headless mode
+opts.headless = True
+assert opts.headless  # Operating in headless mode
 browser = Firefox(options=opts)
+#browser = Chrome(executable_path="/home/ocrow/.local/bin/chromedriver", \
+#    options=opts)
 browser.get('https://www.bandcamp.com')
 #browser.find_element_by_class_name('playbutton').click()
 browser.find_element(By.CLASS_NAME, value='playbutton').click()
 tracks = browser.find_elements(By.CLASS_NAME, value='discover-item')
 assert(len(tracks) == 8)
-tracks[3].click()
+tracks[2].click()
 
-discover_section = browser.find_element(By.CLASS_NAME, value='discover-results')
+discover_section = browser.find_element(By.CLASS_NAME, \
+    value='discover-results')
+
 left_x = discover_section.location['x']
 right_x = left_x + discover_section.size['width']
-discover_items = browser.find_element(By.CLASS_NAME, value='discover_item')
+#discover_items = browser.find_elements(By.CLASS_NAME, \
+#   value='item-link playable')
+discover_items = browser.find_elements(By.XPATH, \
+    value='//div[contains(@class,"discover-item")]')
 tracks = [t for t in discover_items
-              if t.location['x'] >= left_x and t.location['x'] < right_x]
+              if t.location['x'] >= left_x \
+                and t.location['x'] < right_x]
 
 assert len(tracks) == 8
 
